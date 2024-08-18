@@ -1,0 +1,109 @@
+﻿@model List<Demo.Models.MyModel>
+
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<div class="text-center">
+    <h1 class="display-5">Our Books:</h1>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Author</th>
+            <th>Pages</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </table>
+</div>
+
+<h2>Click the button to show the list:</h2>
+
+<form method="post" action="/Home/GetList">
+    <input type="submit" value="Get List" />
+</form>*@
+
+@*@if (Model != null)
+    {
+        <h3>List of Items:</h3>
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>@item.Name (Id: @item.Id)</li>
+            }
+        </ul>
+    }*@
+
+<div class="text-center">
+    <h1 class="display-5">Our Books:</h1>
+    @if (Model != null && Model.Count > 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Author</th>
+                <th>Pages</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Name</td>
+                    <td>@book.Author</td>
+                    <td>@book.Pages</td>
+                    <td>@book.Price</td>
+                    <td>
+                        @if (book.InStock <= 0)
+                        {
+                            <p>Out of stock :-(</p>
+                        }
+                        else
+                        {
+                            <form method="post" action="/Home/AddToShoppingCart">
+                                <input type="hidden" name="bookId" value="@book.ID" />
+                                <button type="submit">Add to shopping cart</button>
+                            </form>
+                            @*<form asp-action="AddToShoppingCart" asp-controller="Home" method="post">
+                                <input type="hidden" name="bookId" value="@book.ID" />
+                                <button type="submit">Add to shopping cart</button>
+                            </form>*@
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No books loaded yet. Click "Load Books to DB" to load the data.</p>
+    }
+
+    <form method="post" action="/Home/Load">
+        <button type="submit">Load Books to DB</button>
+    </form>
+    <br />
+    <br />
+    <form method="post" action="/Home/Commit">
+        <button type="submit">Commit</button>
+    </form>
+
+    @*<form asp-action="Load" asp-controller="Home" method="post">
+            <button type="submit">Load Books to DB</button>
+        </form>*@
+    <br />
+    @*<form asp-action="Commit" asp-controller="Home" method="post">
+            <button type="submit">Commit</button>
+        </form>*@
+
+    @if (TempData["Message"] != null)
+    {
+        <p style='color: green'>@TempData["Message"]</p>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <p style='color: red'>@TempData["ErrorMessage"]</p>
+    }
+</div>
